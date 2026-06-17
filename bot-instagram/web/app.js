@@ -290,9 +290,12 @@ function editorInstantanea(pz) {
 }
 function directivaImagen(pz) {
   if (!pz.directiva_imagen) return "";
-  if (pz.directiva_imagen.tipo === "GENERAR_IA")
-    return `<div class="directiva-ia"><b>Prompt de imagen:</b> ${esc(pz.directiva_imagen.prompt_ia)}</div>
-      <div class="editor-fila"><button class="btn-borde" disabled>Generar imagen (Fase 2)</button></div>`;
+  if (pz.directiva_imagen.tipo === "GENERAR_IA") {
+    const yaTiene = !!pz.imagen_subida;
+    return `<label style="margin-top:8px;">Prompt de imagen (IA gratis) ${badgeAuto}</label>
+      <textarea class="f-prompt" style="min-height:54px;">${esc(pz.directiva_imagen.prompt_ia)}</textarea>
+      <div class="editor-fila"><button class="btn-generar-img btn-borde">🎨 ${yaTiene ? "Regenerar imagen" : "Generar imagen"}</button></div>`;
+  }
   return `<div class="directiva-ia"><b>Qué fotografiar:</b> ${esc(pz.directiva_imagen.descripcion_foto)}</div>${botonSubir()}`;
 }
 function botonSubir() {
@@ -345,6 +348,22 @@ function wirePieza(div, cat, i, pz) {
     try { mostrarAviso("Subiendo…"); const r = await api("POST", "/api/subir", { form });
       pz.imagen_subida = r.url; div.replaceWith(crearTarjeta(cat, i, pz)); autoguardar(); mostrarAviso("Foto subida");
     } catch (err) { mostrarAviso("No se pudo subir"); }
+  });
+
+  // Prompt de imagen IA (editable)
+  on(".f-prompt", "input", e => { pz.directiva_imagen.prompt_ia = e.target.value; autoguardar(); });
+
+  // Generar / regenerar imagen con IA (Pollinations Flux)
+  on(".btn-generar-img", "click", async (e) => {
+    const btn = e.target;
+    const prompt = ((div.querySelector(".f-prompt") || {}).value || pz.directiva_imagen.prompt_ia || "").trim();
+    if (!prompt) { mostrarAviso("Escribe un prompt primero"); return; }
+    const txt = btn.textContent; btn.disabled = true; btn.textContent = "Generando…";
+    try {
+      const form = new FormData(); form.append("categoria", cat); form.append("indice", i); form.append("prompt", prompt);
+      const r = await api("POST", "/api/generar-imagen", { form });
+      pz.imagen_subida = r.url; div.replaceWith(crearTarjeta(cat, i, pz)); autoguardar(); mostrarAviso("Imagen generada");
+    } catch (err) { btn.disabled = false; btn.textContent = txt; mostrarAviso("No se pudo generar"); }
   });
 }
 
