@@ -4,6 +4,7 @@
   "idioma": "es",
   "modelo": "gemini-3-flash-preview",
   "modelo_respaldo": "gemini-2.5-flash",
+  "usar_tendencias": true,
   "temas_semilla": [
     "motivacion diaria",
     "habitos saludables",
