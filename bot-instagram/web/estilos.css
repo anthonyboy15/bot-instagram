@@ -176,3 +176,53 @@ textarea:focus { outline: none; border-color: #555; }
 .spinner { width: 26px; height: 26px; border: 3px solid var(--border); border-top-color: var(--azul);
   border-radius: 50%; margin: 0 auto 12px; animation: girar .8s linear infinite; }
 @keyframes girar { to { transform: rotate(360deg); } }
+
+/* ===== Badges de publicabilidad ===== */
+.leyenda { display:flex; gap:12px; flex-wrap:wrap; padding:0 14px 6px; font-size:11px; color:var(--muted); }
+.badge-pub { display:inline-flex; align-items:center; gap:5px; font-size:10px; padding:2px 8px; border-radius:999px; }
+.badge-auto { background:#10261a; color:#5fd29a; border:1px solid #1d4a33; }
+.badge-ig { background:#2a2113; color:#f0c987; border:1px solid #4a3a1a; }
+.dot { width:7px; height:7px; border-radius:50%; display:inline-block; }
+.dot-auto { background:#3ddc84; } .dot-ig { background:#f0c987; }
+.editor label .badge-pub { margin-left:6px; }
+
+/* ===== Tarjeta de musica ===== */
+.musica { margin-top:10px; background:#101822; border:1px solid #1d3247; border-radius:10px; padding:10px; }
+.musica-cab { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; font-weight:500; }
+.musica input { margin-bottom:8px; }
+.musica-porque { font-size:11px; color:var(--muted); margin-top:2px; }
+.musica-acc { margin-top:8px; }
+.chip-musica { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.14);
+  color:#fff; border-radius:999px; padding:4px 10px; font-size:11px; max-width:92%; }
+
+/* ===== Editor de sticker ===== */
+.emoji-fila { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+.emoji-fila button { font-size:18px; width:38px; height:38px; border-radius:8px; border:1px solid var(--border);
+  background:#000; cursor:pointer; line-height:1; }
+.emoji-fila button.sel { border-color:var(--azul); background:#0b2233; }
+.opciones-fila { display:flex; gap:8px; }
+.opciones-fila input { margin-bottom:8px; }
+
+/* ===== Stickers renderizados en la historia (preview) ===== */
+.st-box { width:100%; border-radius:12px; padding:10px; }
+.st-translucida { background:rgba(255,255,255,.16); }
+.st-translucida .preg { color:#fff; font-size:11px; text-align:center; margin-bottom:8px; }
+.st-translucida .ops { display:flex; gap:6px; }
+.st-translucida .ops span { flex:1; text-align:center; background:rgba(0,0,0,.4); color:#fff; border-radius:8px; font-size:11px; padding:6px; }
+.st-blanca { background:#fff; }
+.st-blanca .preg { color:#262626; font-size:11px; text-align:center; margin-bottom:8px; }
+.st-blanca .campo { background:#efefef; color:#999; border-radius:8px; font-size:11px; padding:6px; text-align:center; }
+.st-slider .track { position:relative; height:6px; border-radius:999px; background:linear-gradient(90deg,#f0997b,#d4537e); margin-top:4px; }
+.st-slider .thumb { position:absolute; left:60%; top:50%; transform:translate(-50%,-50%); width:26px; height:26px;
+  border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.st-cuenta { background:rgba(0,0,0,.55); }
+.st-cuenta .reloj { color:#fff; font-size:16px; text-align:center; font-weight:500; letter-spacing:2px; margin-top:4px; }
+
+/* feed extras */
+.ig-carrusel { position:absolute; top:8px; right:8px; background:rgba(0,0,0,.6); color:#fff; font-size:11px; padding:2px 8px; border-radius:999px; }
+.ig-likes { color:#fff; font-size:12px; }
+
+/* instantanea: marco mas redondeado tipo Instants */
+.vert.instant { border-radius:26px; }
+.instant-aa { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;
+  background:rgba(0,0,0,.45); color:#fff; border-radius:8px; padding:2px 8px; font-size:13px; }
