@@ -1,0 +1,6 @@
+# Variables de entorno (contienen tokens secretos — nunca subir)
+.env
+
+# Caché de Python
+__pycache__/
+*.pyc
