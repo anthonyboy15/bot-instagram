@@ -82,6 +82,23 @@ class DirectivaImagen(BaseModel):
     descripcion_foto: str  # que foto tomar (vacio "" si es GENERAR_IA)
 
 
+class Musica(BaseModel):
+    """Sugerencia de musica. OJO: se agrega en la app de IG; el API no la pone."""
+    titulo: str       # nombre de la cancion sugerida ("" si ninguna)
+    artista: str      # interprete ("" si ninguna)
+    momento: str      # que parte usar (ej: "el coro, ~seg 30")
+    por_que: str      # por que encaja con el contenido / la tendencia
+
+
+class Sticker(BaseModel):
+    """Sticker interactivo de historia. OJO: se agrega en la app de IG; el API no lo pone."""
+    tipo: Literal["encuesta", "pregunta", "cuestionario",
+                  "cuenta_regresiva", "control_deslizante", "ninguno"]
+    texto: str            # la pregunta o encabezado ("" si tipo es 'ninguno')
+    opciones: list[str]   # opciones para encuesta/cuestionario (vacio si no aplica)
+    emoji: str            # emoji para 'control_deslizante' (vacio si no aplica)
+
+
 class Publicacion(BaseModel):
     """Una publicacion del feed (la que da mas ALCANCE a nuevos seguidores)."""
     fecha: str
@@ -91,6 +108,8 @@ class Publicacion(BaseModel):
     idea: str
     caption: str
     hashtags: list[str]
+    ubicacion: str                # lugar sugerido y editable ("" si ninguno)
+    musica: Musica                # sugerencia de musica
     directiva_imagen: DirectivaImagen
 
 
@@ -101,8 +120,8 @@ class Historia(BaseModel):
     dia_semana: str
     idea: str
     texto_en_pantalla: str
-    interaccion: Literal["encuesta", "pregunta", "cuestionario",
-                         "cuenta_regresiva", "control_deslizante", "ninguno"]
+    sticker: Sticker              # sticker interactivo sugerido
+    musica: Musica                # sugerencia de musica
     directiva_imagen: DirectivaImagen
 
 
@@ -340,18 +359,25 @@ def construir_prompt(config: dict, ventana: list[dict], tendencias: str = "") ->
         "QUE ENTREGAR EN CADA FORMATO:\n\n"
         "PUBLICACIONES (feed; dan alcance): fecha, hora, dia_semana, tipo "
         "('foto'|'carrusel'|'idea_reel'), idea, caption (1a linea que detenga el "
-        "scroll), hashtags (5-12, sin #) y directiva_imagen:\n"
+        "scroll), hashtags (5-12, sin #), 'ubicacion' (lugar plausible y editable, "
+        "p.ej. una zona/ciudad), 'musica' {titulo, artista, momento (que parte usar, "
+        "ej. 'el coro ~seg 30'), por_que (encaje con contenido/tendencia)} y "
+        "directiva_imagen:\n"
         "    * 'GENERAR_IA': 'prompt_ia' detallado y 'descripcion_foto'='' .\n"
         "    * 'FOTO_PROPIA': 'descripcion_foto' de que foto tomar y 'prompt_ia'='' .\n\n"
         "HISTORIAS (24h; dan conexion): fecha, hora, dia_semana, idea, "
-        "texto_en_pantalla (breve), 'interaccion' (sticker: 'encuesta','pregunta',"
-        "'cuestionario','cuenta_regresiva','control_deslizante' o 'ninguno') y su "
-        "directiva_imagen. Varia los stickers.\n\n"
+        "texto_en_pantalla (breve), 'musica' (igual que arriba) y 'sticker' "
+        "{tipo: 'encuesta'|'pregunta'|'cuestionario'|'cuenta_regresiva'|"
+        "'control_deslizante'|'ninguno'; texto: la pregunta o encabezado; opciones: "
+        "lista (2 para encuesta, 2-4 para cuestionario, vacia en los demas); emoji: "
+        "solo para 'control_deslizante' (vacio en los demas)} y su directiva_imagen. "
+        "Varia los stickers entre historias.\n\n"
         "NOTAS: fecha y 'texto' de MAXIMO 60 caracteres, cercano o curioso.\n\n"
         "INSTANTANEAS (Instagram Instants; fotos EN VIVO, sin filtros ni edicion): "
         "fecha, hora, dia_semana, idea y 'descripcion_foto' del momento real a "
         "capturar. Siempre fotos tuyas del instante (nunca IA).\n\n"
-        "Recuerda: contenido realista y SIN datos inventados."
+        "Recuerda: contenido realista y SIN datos inventados. La musica y la ubicacion "
+        "son SUGERENCIAS editables; no afirmes que una cancion es 'la #1' si no lo sabes."
     )
     return system, user
 
@@ -443,6 +469,10 @@ def mostrar_plan(plan: PlanContenido, config: dict,
         print(f"    Caption: {p.caption}")
         if p.hashtags:
             print(f"    Hashtags: {' '.join('#' + h.lstrip('#') for h in p.hashtags)}")
+        if p.ubicacion:
+            print(f"    Ubicacion [auto]: {p.ubicacion}")
+        if p.musica.titulo:
+            print(f"    Musica [en IG]: {p.musica.titulo} - {p.musica.artista} ({p.musica.momento})")
         d = p.directiva_imagen
         origen = d.prompt_ia if d.tipo == "GENERAR_IA" else d.descripcion_foto
         print(f"    Imagen [{d.tipo}]: {origen}")
@@ -451,9 +481,14 @@ def mostrar_plan(plan: PlanContenido, config: dict,
     for i, h in enumerate(sorted(plan.historias, key=lambda x: (x.fecha, x.hora)), 1):
         d = h.directiva_imagen
         origen = d.prompt_ia if d.tipo == "GENERAR_IA" else d.descripcion_foto
-        print(f"\n#{i}  {h.fecha} ({h.dia_semana})  {h.hora}   sticker: {h.interaccion}")
+        print(f"\n#{i}  {h.fecha} ({h.dia_semana})  {h.hora}   sticker: {h.sticker.tipo}")
         print(f"    Idea: {h.idea}")
         print(f"    En pantalla: {h.texto_en_pantalla}")
+        if h.sticker.tipo != "ninguno":
+            extra = " ".join(filter(None, [h.sticker.texto, " / ".join(h.sticker.opciones), h.sticker.emoji]))
+            print(f"    Sticker [en IG]: {h.sticker.tipo} -> {extra}")
+        if h.musica.titulo:
+            print(f"    Musica [en IG]: {h.musica.titulo} - {h.musica.artista} ({h.musica.momento})")
         print(f"    Imagen [{d.tipo}]: {origen}")
 
     print("\n----- NOTAS (texto <=60 car.) -----")
