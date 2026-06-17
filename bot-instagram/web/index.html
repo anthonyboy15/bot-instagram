@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <title>Panel de contenido</title>
+  <link rel="stylesheet" href="/web/estilos.css" />
+</head>
+<body>
+
+  <!-- Pantalla de inicio de sesion -->
+  <section id="pantalla-login" class="login oculto">
+    <div class="login-caja">
+      <h1 class="logo">Panel de contenido</h1>
+      <p class="login-sub">Tu centro de control antes de publicar</p>
+      <input type="password" id="clave" placeholder="Contraseña" autocomplete="current-password" />
+      <button id="btn-login" class="btn-azul">Entrar</button>
+      <p id="login-error" class="error oculto"></p>
+    </div>
+  </section>
+
+  <!-- App -->
+  <section id="pantalla-app" class="oculto">
+    <header class="cabecera">
+      <div class="cab-izq">
+        <img id="perfil-foto" class="perfil-mini" alt="" />
+        <div>
+          <div class="cab-titulo">@<span id="perfil-usuario">tu_usuario</span></div>
+          <div class="cab-sub" id="plan-resumen">Sin plan todavía</div>
+        </div>
+      </div>
+      <div class="cab-acciones">
+        <button id="btn-ajustes" class="icono" aria-label="Ajustes"><i>⚙</i></button>
+      </div>
+    </header>
+
+    <div class="barra-modo">
+      <span class="pill-borrador">Modo borrador · nada se publica aún</span>
+    </div>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab activa" data-cat="publicaciones">Publicaciones</button>
+      <button class="tab" data-cat="historias">Historias</button>
+      <button class="tab" data-cat="notas">Notas</button>
+      <button class="tab" data-cat="instantaneas">Instantáneas</button>
+    </nav>
+
+    <main id="contenido" class="contenido">
+      <!-- Aqui se renderizan las tarjetas -->
+    </main>
+
+    <!-- Barra inferior de acciones -->
+    <div class="barra-inferior">
+      <button id="btn-generar" class="btn-azul ancho"><i>✨</i> Generar plan</button>
+      <button id="btn-tendencias" class="btn-borde" disabled title="Llega en la Fase 4"><i>📈</i> Tendencias</button>
+    </div>
+
+    <!-- Panel de ajustes (perfil) -->
+    <div id="panel-ajustes" class="modal oculto">
+      <div class="modal-caja">
+        <div class="modal-cab">
+          <span>Ajustes de perfil</span>
+          <button id="cerrar-ajustes" class="icono" aria-label="Cerrar"><i>✕</i></button>
+        </div>
+        <label class="campo-label">Usuario de Instagram</label>
+        <input type="text" id="ajuste-usuario" placeholder="tu_usuario" />
+        <label class="campo-label">Foto de perfil</label>
+        <div class="subir-perfil">
+          <img id="ajuste-foto-prev" class="perfil-grande" alt="" />
+          <label class="btn-borde">
+            Subir foto
+            <input type="file" id="ajuste-foto" accept="image/*" hidden />
+          </label>
+        </div>
+        <button id="guardar-perfil" class="btn-azul ancho">Guardar</button>
+      </div>
+    </div>
+
+    <!-- Aviso flotante -->
+    <div id="aviso" class="aviso oculto"></div>
+  </section>
+
+  <script src="/web/app.js"></script>
+</body>
+</html>
