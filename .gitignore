@@ -1,0 +1,6 @@
+# Configuracion y memoria local de Claude Code (no versionar)
+.claude/
+
+# Cache de Python
+__pycache__/
+*.pyc

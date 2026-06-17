@@ -7,3 +7,6 @@ __pycache__/
 
 # Plan generado por el planificador (se regenera al ejecutarlo)
 plan.json
+
+# Imagenes subidas desde la app (no versionar)
+subidas/

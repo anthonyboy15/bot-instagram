@@ -1,6 +1,7 @@
 {
   "enfoque": "crecimiento general",
   "zona_horaria": "America/Lima",
+  "usuario_instagram": "manning.martin",
   "idioma": "es",
   "modelo": "gemini-3-flash-preview",
   "modelo_respaldo": "gemini-2.5-flash",

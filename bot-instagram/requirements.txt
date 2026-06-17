@@ -1,0 +1,13 @@
+# Dependencias del bot de Instagram
+# Instala todo con:  pip install -r requirements.txt
+
+# Planificador (IA + utilidades)
+google-genai
+python-dotenv
+tzdata
+requests
+
+# App web (Fase 1)
+fastapi
+uvicorn[standard]
+python-multipart
