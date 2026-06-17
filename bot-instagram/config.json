@@ -1,0 +1,19 @@
+{
+  "enfoque": "crecimiento general",
+  "zona_horaria": "America/Lima",
+  "idioma": "es",
+  "modelo": "gemini-3-flash-preview",
+  "modelo_respaldo": "gemini-2.5-flash",
+  "temas_semilla": [
+    "motivacion diaria",
+    "habitos saludables",
+    "detras de camaras de mi dia",
+    "consejos rapidos"
+  ],
+  "cadencia": {
+    "publicaciones_feed_por_semana": 4,
+    "historias_por_dia": 2,
+    "notas_por_semana": 3,
+    "instantaneas_por_semana": 3
+  }
+}
