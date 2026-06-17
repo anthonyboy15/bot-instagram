@@ -22,9 +22,12 @@ Luego abre http://localhost:8000  (o, desde el celular, la URL del tunel).
 import os
 import json
 import time
+import random
 import secrets
 from pathlib import Path
+from urllib.parse import quote
 
+import requests
 from dotenv import load_dotenv
 from fastapi import (FastAPI, Cookie, Depends, HTTPException, Request,
                      Response, UploadFile, File, Form)
@@ -200,4 +203,30 @@ async def subir(_=Depends(requiere_sesion),
     nombre = f"{categoria}_{indice}_{int(time.time())}{ext}"
     with open(SUBIDAS_DIR / nombre, "wb") as f:
         f.write(await foto.read())
+    return {"url": f"/subidas/{nombre}"}
+
+
+@app.post("/api/generar-imagen")
+def generar_imagen(_=Depends(requiere_sesion),
+                   categoria: str = Form(...),
+                   indice: int = Form(...),
+                   prompt: str = Form(...)):
+    """
+    Genera una imagen con Pollinations (Flux, GRATIS) a partir del prompt y la
+    guarda localmente. Devuelve la URL para mostrarla en el preview.
+    """
+    prompt = (prompt or "").strip()
+    if not prompt:
+        raise HTTPException(status_code=400, detail="El prompt esta vacio")
+    semilla = random.randint(1, 1_000_000)  # cambia la semilla para 'regenerar'
+    url_poll = (f"https://image.pollinations.ai/prompt/{quote(prompt)}"
+                f"?width=1024&height=1024&nologo=true&model=flux&seed={semilla}")
+    try:
+        r = requests.get(url_poll, timeout=120)
+        r.raise_for_status()
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"No se pudo generar la imagen: {e}")
+    nombre = f"ia_{categoria}_{indice}_{int(time.time())}.jpg"
+    with open(SUBIDAS_DIR / nombre, "wb") as f:
+        f.write(r.content)
     return {"url": f"/subidas/{nombre}"}
